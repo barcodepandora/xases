@@ -61,7 +61,7 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let object = self.viewModel!.products![indexPath.row] as! Product
                 let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-//                controller.detailItem = object
+                controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
                 detailViewController = controller
@@ -80,9 +80,15 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MasterCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MasterCell", for: indexPath) as! MasterTableViewCell
         let object = self.viewModel!.products![indexPath.row] as! Product
         cell.textLabel!.text = object.desc
+        cell.imageFor.loadImageUsingCache(withUrl: object.image!)
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        cell.imageFor.isUserInteractionEnabled = true
+        cell.imageFor.addGestureRecognizer(tapGestureRecognizer)
+
         return cell
     }
 
@@ -107,5 +113,51 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
         self.tableView.reloadData()
     }
 
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
+    {
+        if let _: UIImageView = tapGestureRecognizer.view as! UIImageView {
+            print("moon princess")
+        }
+
+        // Your action
+        
+    }
+}
+
+let imageCache = NSCache<NSString, UIImage>()
+extension UIImageView {
+    func loadImageUsingCache(withUrl urlString : String) {
+        let url = URL(string: urlString)
+        if url == nil {return}
+        self.image = nil
+
+        // check cached image
+        if let cachedImage = imageCache.object(forKey: urlString as NSString)  {
+            self.image = cachedImage
+            return
+        }
+
+        let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView.init(style: .gray)
+        addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        activityIndicator.center = self.center
+
+        // if not, download image from url
+        URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
+            if error != nil {
+                print(error!)
+                return
+            }
+
+            DispatchQueue.main.async {
+                if let image = UIImage(data: data!) {
+                    imageCache.setObject(image, forKey: urlString as NSString)
+                    self.image = image
+                    activityIndicator.removeFromSuperview()
+                }
+            }
+
+        }).resume()
+    }
 }
 
