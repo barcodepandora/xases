@@ -15,7 +15,7 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     var viewModel: MasterViewModel?
     var detailViewController: DetailViewController? = nil
     var objects = [Any]()
-
+    var object: Product!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,9 +81,9 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MasterCell", for: indexPath) as! MasterTableViewCell
-        let object = self.viewModel!.products![indexPath.row] as! Product
-        cell.textLabel!.text = object.desc
-        cell.imageFor.loadImageUsingCache(withUrl: object.image!)
+        self.object = self.viewModel!.products![indexPath.row] as! Product
+        cell.textLabel!.text = self.object.desc
+        cell.imageFor.loadImageUsingCache(withUrl: self.object.image!)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         cell.imageFor.isUserInteractionEnabled = true
@@ -113,10 +113,17 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
         self.tableView.reloadData()
     }
 
+    // MARK: - Action
+    
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
     {
         if let _: UIImageView = tapGestureRecognizer.view as! UIImageView {
-            print("moon princess")
+            if let modalViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Modal") as? ImageModalViewController {
+                modalViewController.imageURL = self.object.image
+                modalViewController.modalPresentationStyle = .overCurrentContext
+                present(modalViewController, animated: true, completion: nil)
+
+            }
         }
 
         // Your action
@@ -124,7 +131,10 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     }
 }
 
+// MARK: - Image
+
 let imageCache = NSCache<NSString, UIImage>()
+
 extension UIImageView {
     func loadImageUsingCache(withUrl urlString : String) {
         let url = URL(string: urlString)
