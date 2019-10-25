@@ -13,6 +13,8 @@ protocol DataFoundation {
     func getProduct() -> Product?
     func addProduct(_ product: Product)
     func getAllProduct() -> NSMutableArray
+    func deleteProduct(product: Product)
+
 }
 
 class DataManager: DataFoundation {
@@ -26,6 +28,9 @@ class DataManager: DataFoundation {
     
     func getAllProduct() -> NSMutableArray {
         return []
+    }
+    
+    func deleteProduct(product: Product) {
     }
 }
 

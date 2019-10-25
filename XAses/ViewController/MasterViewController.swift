@@ -16,6 +16,7 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     var detailViewController: DetailViewController? = nil
     var objects = [Any]()
     var object: Product!
+    var limit = 40
 
     // MARK: - View
     
@@ -46,6 +47,12 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
 //        objects.insert(NSDate(), at: 0)
 //        let indexPath = IndexPath(row: 0, section: 0)
 //        tableView.insertRows(at: [indexPath], with: .automatic)
+        let alertController = UIAlertController(title: "ToDo", message: "Crear nuevo producto desde app", preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default) { action in
+        }
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true) {}
+
     }
 
     // MARK: - Segues
@@ -92,9 +99,20 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            self.viewModel?.products!.removeObject(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            self.refresh()
+            if self.tableView.numberOfRows(inSection: 0) == self.limit {
+                let alertController = UIAlertController(title: "Atencion", message: "En la tienda hay que disponer minimo \(limit) productos", preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: "OK", style: .default) { action in
+                }
+                alertController.addAction(OKAction)
+                self.present(alertController, animated: true) {}
+
+            } else {
+                self.viewModel?.indexForRemove = indexPath.row
+                self.viewModel?.deleteProduct(product: self.viewModel?.products![indexPath.row] as! Product) // products!.removeObject(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                self.refresh()
+                
+            }
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }

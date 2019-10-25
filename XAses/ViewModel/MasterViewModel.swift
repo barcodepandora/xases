@@ -11,6 +11,7 @@ import Foundation
 protocol ViewModelBehavoir {
 
     func getAllProduct()
+    func deleteProduct(product: Product)
    
 }
 
@@ -25,10 +26,13 @@ class MasterViewModel: ViewModelBehavoir {
     
     var products: NSMutableArray?
     weak var delegate: ViewModelDelegate?
+    var indexForRemove: Int?
     
     // MARK: - Protocol
     
     func getAllProduct() {
     }
     
+    func deleteProduct(product: Product) {
+    }
 }

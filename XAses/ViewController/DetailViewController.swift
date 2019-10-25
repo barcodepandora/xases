@@ -11,13 +11,15 @@ import UIKit
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
-
+    @IBOutlet weak var name: UILabel!
+    
 
     func configureView() {
         // Update the user interface for the detail item.
         if let detail = detailItem {
             if let label = detailDescriptionLabel {
-                label.text = "\(detail.desc!) vale en tiendas $\(detail.cost!)"
+                label.text = "\(detail.desc!) vale(n) en la tienda $\(detail.cost!)"
+                self.name.text = detail.name
             }
         }
     }

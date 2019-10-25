@@ -43,12 +43,14 @@ class SQLiteManager: DataManager {
     }
     
     override  func getAllProduct() -> NSMutableArray {
+        SQLiteManager.getInstance().manageTable()
         SQLiteManager.getInstance().database!.open()
         let resultSet: FMResultSet! = SQLiteManager.shared.database!.executeQuery("SELECT * FROM Product", withArgumentsIn: [])
         let all : NSMutableArray = NSMutableArray()
         if (resultSet != nil) {
             while resultSet.next() {
                 var product: Product = Product()
+                product.id = Int(resultSet.int (forColumn: "id"))
                 product.name = resultSet.string(forColumn: "name")
                 product.desc = resultSet.string(forColumn: "desc")
                 product.cost = Int(resultSet.int (forColumn: "cost"))
@@ -63,7 +65,7 @@ class SQLiteManager: DataManager {
     
     func manageTable() {
         SQLiteManager.getInstance().database!.open()
-        let sql_stmt = "CREATE TABLE IF NOT EXISTS Product (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, desc TEXT, cost INTEGER, image TEXT)"
+        let sql_stmt = "CREATE TABLE Product (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, desc TEXT, cost INTEGER, image TEXT)"
         let create = SQLiteManager.getInstance().database!.executeStatements(sql_stmt)
         SQLiteManager.getInstance().database!.close()
         if !(create) {
@@ -87,6 +89,13 @@ class SQLiteManager: DataManager {
             }
         }
     }
+    
+    override func deleteProduct(product: Product) {
+        SQLiteManager.getInstance().database!.open()
+        let isDeleted = SQLiteManager.getInstance().database!.executeUpdate("DELETE FROM Product WHERE id=?", withArgumentsIn: [product.id])
+        SQLiteManager.getInstance().database!.close()
+    }
+    
 }
 
 

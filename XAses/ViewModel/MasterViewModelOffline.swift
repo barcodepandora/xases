@@ -14,4 +14,10 @@ class MasterViewModelOffline: MasterViewModel {
         self.products = SQLiteManager.shared.getAllProduct()
         self.delegate!.refresh()
     }
+    
+    override func deleteProduct(product: Product) {
+        SQLiteManager.shared.deleteProduct(product: product)
+        self.products?.removeObject(at: self.indexForRemove!)
+        print("YES")
+    }
 }

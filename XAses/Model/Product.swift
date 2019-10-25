@@ -12,6 +12,7 @@ struct Product: Codable {
 
     // MARK: - Character
 
+    var id: Int?
     var name: String?
     var desc: String?
     var cost: Int?
