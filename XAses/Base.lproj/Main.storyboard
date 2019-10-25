@@ -133,7 +133,7 @@
                                 <rect key="frame" x="20" y="79" width="46" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="24"/>
-                                <state key="normal" title="X"/>
+                                <state key="normal" title="&lt;"/>
                                 <connections>
                                     <action selector="dis:" destination="Pbz-Ff-DyH" eventType="touchUpInside" id="Sdf-RA-aDj"/>
                                 </connections>

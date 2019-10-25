@@ -17,6 +17,8 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     var objects = [Any]()
     var object: Product!
 
+    // MARK: - View
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -28,14 +30,6 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
-        
-        var product = Product(name: "iPhone", desc: "iPhone XR", cost: 1000, image: "https://www.project-imas.com/w/images/e/e4/Takane_Arcade1.jpg")
-//        product.name =
-//        product.desc = "iPhone XR"
-//        product.cost = 1000
-//        product.image = "https://www.project-imas.com/w/images/e/e4/Takane_Arcade1.jpg"
-//        SQLiteManager.shared.addProduct(product)
-        print("All = \(SQLiteManager.shared.getAllProduct())")
         
         viewModel = MasterViewModelOffline()
         viewModel!.delegate = self
@@ -49,9 +43,9 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
 
     @objc
     func insertNewObject(_ sender: Any) {
-        objects.insert(NSDate(), at: 0)
-        let indexPath = IndexPath(row: 0, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
+//        objects.insert(NSDate(), at: 0)
+//        let indexPath = IndexPath(row: 0, section: 0)
+//        tableView.insertRows(at: [indexPath], with: .automatic)
     }
 
     // MARK: - Segues
@@ -82,13 +76,12 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MasterCell", for: indexPath) as! MasterTableViewCell
         self.object = self.viewModel!.products![indexPath.row] as! Product
-        cell.textLabel!.text = self.object.desc
+        cell.textLabel!.text = self.object.name
         cell.imageFor.loadImageUsingCache(withUrl: self.object.image!)
-        
+        cell.imageFor.tag = indexPath.row
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         cell.imageFor.isUserInteractionEnabled = true
         cell.imageFor.addGestureRecognizer(tapGestureRecognizer)
-
         return cell
     }
 
@@ -99,8 +92,9 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            objects.remove(at: indexPath.row)
+            self.viewModel?.products!.removeObject(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            self.refresh()
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
@@ -109,7 +103,6 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     // MARK: - View Model Delegate
        
     func refresh() {
-//        self.reloadData()
         self.tableView.reloadData()
     }
 
@@ -119,15 +112,12 @@ class MasterViewController: UITableViewController, ViewModelDelegate {
     {
         if let _: UIImageView = tapGestureRecognizer.view as! UIImageView {
             if let modalViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Modal") as? ImageModalViewController {
-                modalViewController.imageURL = self.object.image
+                modalViewController.imageURL = (self.viewModel?.products![(tapGestureRecognizer.view as! UIImageView).tag] as! Product).image
                 modalViewController.modalPresentationStyle = .overCurrentContext
                 present(modalViewController, animated: true, completion: nil)
 
             }
         }
-
-        // Your action
-        
     }
 }
 

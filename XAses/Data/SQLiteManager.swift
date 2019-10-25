@@ -33,24 +33,13 @@ class SQLiteManager: DataManager {
     // MARK: - Cache
     
     override func getProduct() -> Product? {
-//        var mocky: Mocky?
-//        do {
-//            let mocky = try Disk.retrieve("0001", from: .documents, as: Mocky.self)
-//        } catch {
-//            print("Unexpected error: \(error).")
-//        }
-//        return mocky
         return nil
     }
     
     override func addProduct(_ product: Product) {
-//        print("-> \(SQLiteUtil.getPath(fileName: "Ases.db"))")
         SQLiteManager.getInstance().database!.open()
-        self.manageTable()
         let isInserted = SQLiteManager.getInstance().database!.executeUpdate("INSERT INTO Product (name, desc, cost, image) VALUES (?, ?, ?, ?)", withArgumentsIn: [product.name, product.desc, product.cost, product.image])
-        
         SQLiteManager.getInstance().database!.close()
-//        return isInserted
     }
     
     override  func getAllProduct() -> NSMutableArray {
@@ -73,9 +62,29 @@ class SQLiteManager: DataManager {
 
     
     func manageTable() {
+        SQLiteManager.getInstance().database!.open()
         let sql_stmt = "CREATE TABLE IF NOT EXISTS Product (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, desc TEXT, cost INTEGER, image TEXT)"
-        if !(SQLiteManager.getInstance().database!.executeStatements(sql_stmt)) {
-            print("Error: \(SQLiteManager.getInstance().database!.lastErrorMessage())")
+        let create = SQLiteManager.getInstance().database!.executeStatements(sql_stmt)
+        SQLiteManager.getInstance().database!.close()
+        if !(create) {
+            print("error create: \(SQLiteManager.getInstance().database!.lastErrorMessage())")
+        } else {
+            if let urlPath = Bundle.main.url(forResource: "Products", withExtension: "json") {
+                do {
+                    let jsonData = try Data(contentsOf: urlPath, options: .mappedIfSafe)
+                    if let jsonDict = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: AnyObject] {
+                        if let products: NSArray = jsonDict["products"] as! NSArray {
+                            for p in products {
+                                print("\(p)")
+                                self.addProduct(Product(name: (p as! NSDictionary)["name"] as! String, desc: (p as! NSDictionary)["desc"] as! String, cost: (p as! NSDictionary)["cost"] as! Int, image: (p as! NSDictionary)["image"] as! String))
+                            }
+                        }
+                    }
+                }
+                catch let jsonError {
+                    print(jsonError)
+                }
+            }
         }
     }
 }

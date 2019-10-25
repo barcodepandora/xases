@@ -17,8 +17,9 @@ struct Product: Codable {
     var cost: Int?
     var image: String?
     
+    // MARK: - Init
+    
     init() {
-        
     }
     
     init(name: String, desc: String, cost: Int, image: String) {

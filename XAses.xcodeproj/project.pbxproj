@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6068062E23623F06001E538A /* ImageModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6068062D23623F06001E538A /* ImageModalViewController.swift */; };
+		6068063023624863001E538A /* Products.json in Resources */ = {isa = PBXBuildFile; fileRef = 6068062F23624863001E538A /* Products.json */; };
 		60D8CD6B2362012400DD7F7E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D8CD6A2362012400DD7F7E /* AppDelegate.swift */; };
 		60D8CD6D2362012400DD7F7E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D8CD6C2362012400DD7F7E /* SceneDelegate.swift */; };
 		60D8CD6F2362012400DD7F7E /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D8CD6E2362012400DD7F7E /* MasterViewController.swift */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		6068062D23623F06001E538A /* ImageModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageModalViewController.swift; sourceTree = "<group>"; };
+		6068062F23624863001E538A /* Products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Products.json; sourceTree = "<group>"; };
 		60D8CD672362012400DD7F7E /* XAses.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XAses.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60D8CD6A2362012400DD7F7E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		60D8CD6C2362012400DD7F7E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				60D8CD952362035900DD7F7E /* DataManager.swift */,
 				60D8CD972362038E00DD7F7E /* SQLiteManager.swift */,
 				60D8CD99236204F800DD7F7E /* SQLiteUtil.swift */,
+				6068062F23624863001E538A /* Products.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				60D8CD762362013900DD7F7E /* Assets.xcassets in Resources */,
 				60D8CD742362012400DD7F7E /* Main.storyboard in Resources */,
 				60D8CDA12362132300DD7F7E /* Ases.db in Resources */,
+				6068063023624863001E538A /* Products.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
